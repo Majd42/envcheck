@@ -7,4 +7,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>envcheck</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageId>envcheck</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Majd Shaheen</Authors>
+    <Description>CLI that validates a .env file against a .env.example template and reports missing, empty, or extra keys.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Majd42/envcheck</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Majd42/envcheck</RepositoryUrl>
+    <PackageTags>dotnet-tool;cli;env;dotenv;devtools</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
 </Project>
