@@ -33,6 +33,19 @@ var example = EnvFile.ParseFile(options.ExamplePath);
 var actual = EnvFile.ParseFile(options.EnvPath);
 var result = EnvComparer.Compare(example, actual);
 
+if (options.Fix && result.MissingKeys.Count > 0)
+{
+    var added = EnvSync.AppendMissingKeys(options.EnvPath, example, result.MissingKeys);
+
+    WriteColored($"Added {added.Count} missing key(s) to {options.EnvPath}:", ConsoleColor.Cyan);
+    foreach (var key in added)
+        WriteColored($"  - {key}", ConsoleColor.Cyan);
+    Console.WriteLine();
+
+    actual = EnvFile.ParseFile(options.EnvPath);
+    result = EnvComparer.Compare(example, actual);
+}
+
 PrintKeyList($"Missing keys (present in {options.ExamplePath}, missing from {options.EnvPath}):", result.MissingKeys, ConsoleColor.Red);
 PrintKeyList($"Empty values (present in {options.EnvPath} but blank):", result.EmptyValueKeys, ConsoleColor.Yellow);
 PrintKeyList($"Extra keys (present in {options.EnvPath}, not in {options.ExamplePath}):", result.ExtraKeys, options.Strict ? ConsoleColor.Red : ConsoleColor.DarkGray);

@@ -33,6 +33,7 @@ envcheck --example config/.env.example --env config/.env
 | `--example <path>` | Path to the template file (default: `.env.example`) |
 | `--env <path>` | Path to the file to validate (default: `.env`) |
 | `--strict` | Also fail when `.env` has keys not present in the example |
+| `--fix` | Append missing keys to `.env`, using the values from `.env.example` |
 | `-h`, `--help` | Show help |
 
 ### Exit codes
@@ -78,6 +79,27 @@ Empty values (present in .env but blank):
 ```
 
 and exits with code `1`.
+
+### Auto-fixing missing keys
+
+Run with `--fix` to append any missing keys straight into `.env`, copying
+their default value from `.env.example`:
+
+```bash
+envcheck --fix
+```
+
+```
+Added 1 missing key(s) to .env:
+  - DEBUG
+
+Empty values (present in .env but blank):
+  - API_KEY
+```
+
+`--fix` only adds keys that are completely missing — it never overwrites
+existing values, so blank values (like `API_KEY` above) are left for you to
+fill in yourself.
 
 ## Building from source
 

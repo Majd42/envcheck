@@ -15,6 +15,7 @@ public class CliOptionsTests
         Assert.Equal(".env.example", options!.ExamplePath);
         Assert.Equal(".env", options.EnvPath);
         Assert.False(options.Strict);
+        Assert.False(options.Fix);
         Assert.False(options.ShowHelp);
     }
 
@@ -30,6 +31,16 @@ public class CliOptionsTests
         Assert.Equal("config/.env.example", options!.ExamplePath);
         Assert.Equal("config/.env", options.EnvPath);
         Assert.True(options.Strict);
+    }
+
+    [Fact]
+    public void Parse_ReadsFixFlag()
+    {
+        var options = CliOptions.Parse(["--fix"], out var error);
+
+        Assert.Null(error);
+        Assert.NotNull(options);
+        Assert.True(options!.Fix);
     }
 
     [Theory]
