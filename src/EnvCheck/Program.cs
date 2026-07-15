@@ -11,11 +11,11 @@ if (error is not null)
     return 2;
 }
 
-//if (options!.ShowHelp)
-//{
-//    Console.WriteLine(CliOptions.HelpText);
-//    return 0;
-//}
+if (options!.ShowHelp)
+{
+    Console.WriteLine(CliOptions.HelpText);
+    return 0;
+}
 
 if (!File.Exists(options.ExamplePath))
 {
