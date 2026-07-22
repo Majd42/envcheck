@@ -34,6 +34,7 @@ envcheck --example config/.env.example --env config/.env
 | `--env <path>` | Path to the file to validate (default: `.env`) |
 | `--strict` | Also fail when `.env` has keys not present in the example |
 | `--fix` | Append missing keys to `.env`, using the values from `.env.example` |
+| `--json` | Output the comparison result as JSON (machine-readable) |
 | `-h`, `--help` | Show help |
 
 ### Exit codes
@@ -100,6 +101,35 @@ Empty values (present in .env but blank):
 `--fix` only adds keys that are completely missing — it never overwrites
 existing values, so blank values (like `API_KEY` above) are left for you to
 fill in yourself.
+
+### JSON output
+
+For scripting and CI, `--json` emits the full result as a machine-readable
+object instead of the coloured text report. The exit code is unchanged, so
+you can still branch on success/failure:
+
+```bash
+envcheck --json
+```
+
+```json
+{
+  "example": ".env.example",
+  "env": ".env",
+  "ok": false,
+  "missingKeys": [
+    "DEBUG"
+  ],
+  "emptyValueKeys": [
+    "API_KEY"
+  ],
+  "extraKeys": [],
+  "addedKeys": []
+}
+```
+
+When combined with `--fix`, any keys that were appended appear under
+`addedKeys`.
 
 ## Building from source
 
