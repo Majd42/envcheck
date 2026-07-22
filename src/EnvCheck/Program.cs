@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using EnvCheck.Cli;
 using EnvCheck.Core;
 
@@ -33,24 +35,52 @@ var example = EnvFile.ParseFile(options.ExamplePath);
 var actual = EnvFile.ParseFile(options.EnvPath);
 var result = EnvComparer.Compare(example, actual);
 
+IReadOnlyList<string> addedKeys = [];
+
 if (options.Fix && result.MissingKeys.Count > 0)
 {
-    var added = EnvSync.AppendMissingKeys(options.EnvPath, example, result.MissingKeys);
-
-    WriteColored($"Added {added.Count} missing key(s) to {options.EnvPath}:", ConsoleColor.Cyan);
-    foreach (var key in added)
-        WriteColored($"  - {key}", ConsoleColor.Cyan);
-    Console.WriteLine();
+    addedKeys = EnvSync.AppendMissingKeys(options.EnvPath, example, result.MissingKeys);
 
     actual = EnvFile.ParseFile(options.EnvPath);
     result = EnvComparer.Compare(example, actual);
 }
 
+var failed = result.HasErrors || (options.Strict && result.ExtraKeys.Count > 0);
+
+if (options.Json)
+{
+    var report = new
+    {
+        example = options.ExamplePath,
+        env = options.EnvPath,
+        ok = !failed,
+        missingKeys = result.MissingKeys,
+        emptyValueKeys = result.EmptyValueKeys,
+        extraKeys = result.ExtraKeys,
+        addedKeys
+    };
+
+    var jsonOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.Never
+    };
+
+    Console.WriteLine(JsonSerializer.Serialize(report, jsonOptions));
+    return failed ? 1 : 0;
+}
+
+if (addedKeys.Count > 0)
+{
+    WriteColored($"Added {addedKeys.Count} missing key(s) to {options.EnvPath}:", ConsoleColor.Cyan);
+    foreach (var key in addedKeys)
+        WriteColored($"  - {key}", ConsoleColor.Cyan);
+    Console.WriteLine();
+}
+
 PrintKeyList($"Missing keys (present in {options.ExamplePath}, missing from {options.EnvPath}):", result.MissingKeys, ConsoleColor.Red);
 PrintKeyList($"Empty values (present in {options.EnvPath} but blank):", result.EmptyValueKeys, ConsoleColor.Yellow);
 PrintKeyList($"Extra keys (present in {options.EnvPath}, not in {options.ExamplePath}):", result.ExtraKeys, options.Strict ? ConsoleColor.Red : ConsoleColor.DarkGray);
-
-var failed = result.HasErrors || (options.Strict && result.ExtraKeys.Count > 0);
 
 if (!failed)
 {

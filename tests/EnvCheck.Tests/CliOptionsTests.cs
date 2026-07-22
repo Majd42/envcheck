@@ -43,6 +43,16 @@ public class CliOptionsTests
         Assert.True(options!.Fix);
     }
 
+    [Fact]
+    public void Parse_ReadsJsonFlag()
+    {
+        var options = CliOptions.Parse(["--json"], out var error);
+
+        Assert.Null(error);
+        Assert.NotNull(options);
+        Assert.True(options!.Json);
+    }
+
     [Theory]
     [InlineData("-h")]
     [InlineData("--help")]

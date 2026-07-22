@@ -6,6 +6,7 @@ public sealed class CliOptions
     public string EnvPath { get; init; } = ".env";
     public bool Strict { get; init; }
     public bool Fix { get; init; }
+    public bool Json { get; init; }
     public bool ShowHelp { get; init; }
 
     public static CliOptions? Parse(string[] args, out string? error)
@@ -15,6 +16,7 @@ public sealed class CliOptions
         var envPath = ".env";
         var strict = false;
         var fix = false;
+        var json = false;
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -30,6 +32,10 @@ public sealed class CliOptions
 
                 case "--fix":
                     fix = true;
+                    break;
+
+                case "--json":
+                    json = true;
                     break;
 
                 case "--example":
@@ -53,7 +59,8 @@ public sealed class CliOptions
             ExamplePath = examplePath,
             EnvPath = envPath,
             Strict = strict,
-            Fix = fix
+            Fix = fix,
+            Json = json
         };
     }
 
@@ -82,6 +89,7 @@ public sealed class CliOptions
           --env <path>       Path to the file to validate (default: .env)
           --strict           Also fail when the env file has keys not present in the example
           --fix              Append missing keys to the env file, using the example's values
+          --json             Output the comparison result as JSON (machine-readable)
           -h, --help         Show this help message
 
         Exit codes:
