@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EnvCheck.Cli;
@@ -16,6 +17,22 @@ if (error is not null)
 if (options!.ShowHelp)
 {
     Console.WriteLine(CliOptions.HelpText);
+    return 0;
+}
+
+if (options.ShowVersion)
+{
+    var assembly = Assembly.GetExecutingAssembly();
+    var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? assembly.GetName().Version?.ToString()
+        ?? "unknown";
+
+    // Strip any build metadata (e.g. "0.1.0+abc1234") for clean output.
+    var plusIndex = version.IndexOf('+');
+    if (plusIndex >= 0)
+        version = version[..plusIndex];
+
+    Console.WriteLine($"envcheck {version}");
     return 0;
 }
 
