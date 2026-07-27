@@ -65,6 +65,18 @@ public class CliOptionsTests
         Assert.True(options!.ShowHelp);
     }
 
+    [Theory]
+    [InlineData("-v")]
+    [InlineData("--version")]
+    public void Parse_SetsShowVersion(string versionFlag)
+    {
+        var options = CliOptions.Parse([versionFlag], out var error);
+
+        Assert.Null(error);
+        Assert.NotNull(options);
+        Assert.True(options!.ShowVersion);
+    }
+
     [Fact]
     public void Parse_ReturnsError_ForUnknownArgument()
     {

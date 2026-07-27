@@ -35,6 +35,7 @@ envcheck --example config/.env.example --env config/.env
 | `--strict` | Also fail when `.env` has keys not present in the example |
 | `--fix` | Append missing keys to `.env`, using the values from `.env.example` |
 | `--json` | Output the comparison result as JSON (machine-readable) |
+| `-v`, `--version` | Show version information |
 | `-h`, `--help` | Show help |
 
 ### Exit codes

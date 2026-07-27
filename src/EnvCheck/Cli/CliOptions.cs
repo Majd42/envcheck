@@ -8,6 +8,7 @@ public sealed class CliOptions
     public bool Fix { get; init; }
     public bool Json { get; init; }
     public bool ShowHelp { get; init; }
+    public bool ShowVersion { get; init; }
 
     public static CliOptions? Parse(string[] args, out string? error)
     {
@@ -25,6 +26,10 @@ public sealed class CliOptions
                 case "-h":
                 case "--help":
                     return new CliOptions { ShowHelp = true };
+
+                case "-v":
+                case "--version":
+                    return new CliOptions { ShowVersion = true };
 
                 case "--strict":
                     strict = true;
@@ -90,6 +95,7 @@ public sealed class CliOptions
           --strict           Also fail when the env file has keys not present in the example
           --fix              Append missing keys to the env file, using the example's values
           --json             Output the comparison result as JSON (machine-readable)
+          -v, --version      Show version information
           -h, --help         Show this help message
 
         Exit codes:
