@@ -64,6 +64,9 @@ if (options.Fix && result.MissingKeys.Count > 0)
 
 var failed = result.HasErrors || (options.Strict && result.ExtraKeys.Count > 0);
 
+// Honor the NO_COLOR convention (https://no-color.org/): any non-empty value disables color.
+var useColor = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR"));
+
 if (options.Json)
 {
     var report = new
@@ -107,7 +110,7 @@ if (!failed)
 
 return 1;
 
-static void PrintKeyList(string header, IReadOnlyList<string> keys, ConsoleColor color)
+void PrintKeyList(string header, IReadOnlyList<string> keys, ConsoleColor color)
 {
     if (keys.Count == 0)
         return;
@@ -117,8 +120,14 @@ static void PrintKeyList(string header, IReadOnlyList<string> keys, ConsoleColor
         WriteColored($"  - {key}", color);
 }
 
-static void WriteColored(string text, ConsoleColor color)
+void WriteColored(string text, ConsoleColor color)
 {
+    if (!useColor)
+    {
+        Console.WriteLine(text);
+        return;
+    }
+
     var previous = Console.ForegroundColor;
     Console.ForegroundColor = color;
     Console.WriteLine(text);

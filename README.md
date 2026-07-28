@@ -132,6 +132,17 @@ envcheck --json
 When combined with `--fix`, any keys that were appended appear under
 `addedKeys`.
 
+### Disabling colour
+
+`envcheck` honours the [`NO_COLOR`](https://no-color.org/) convention: set the
+`NO_COLOR` environment variable to any non-empty value and the text report is
+printed without ANSI colours. Handy when writing to a log file or a terminal
+that mangles colour codes.
+
+```bash
+NO_COLOR=1 envcheck
+```
+
 ## Building from source
 
 ```bash
