@@ -18,8 +18,19 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Majd42/envcheck</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Majd42/envcheck</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageTags>dotnet-tool;cli;env;dotenv;devtools</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <!-- Reproducible builds + source debugging for the published package. -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Deterministic, path-normalized output when building in CI. -->
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
