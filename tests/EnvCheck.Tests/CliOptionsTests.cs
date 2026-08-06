@@ -54,6 +54,18 @@ public class CliOptionsTests
     }
 
     [Theory]
+    [InlineData("-q")]
+    [InlineData("--quiet")]
+    public void Parse_ReadsQuietFlag(string quietFlag)
+    {
+        var options = CliOptions.Parse([quietFlag], out var error);
+
+        Assert.Null(error);
+        Assert.NotNull(options);
+        Assert.True(options!.Quiet);
+    }
+
+    [Theory]
     [InlineData("-h")]
     [InlineData("--help")]
     public void Parse_SetsShowHelp(string helpFlag)
