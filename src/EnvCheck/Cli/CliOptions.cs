@@ -7,6 +7,7 @@ public sealed class CliOptions
     public bool Strict { get; init; }
     public bool Fix { get; init; }
     public bool Json { get; init; }
+    public bool Quiet { get; init; }
     public bool ShowHelp { get; init; }
     public bool ShowVersion { get; init; }
 
@@ -18,6 +19,7 @@ public sealed class CliOptions
         var strict = false;
         var fix = false;
         var json = false;
+        var quiet = false;
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -43,6 +45,11 @@ public sealed class CliOptions
                     json = true;
                     break;
 
+                case "-q":
+                case "--quiet":
+                    quiet = true;
+                    break;
+
                 case "--example":
                     if (!TryReadValue(args, ref i, out examplePath, out error))
                         return null;
@@ -65,7 +72,8 @@ public sealed class CliOptions
             EnvPath = envPath,
             Strict = strict,
             Fix = fix,
-            Json = json
+            Json = json,
+            Quiet = quiet
         };
     }
 
@@ -95,6 +103,7 @@ public sealed class CliOptions
           --strict           Also fail when the env file has keys not present in the example
           --fix              Append missing keys to the env file, using the example's values
           --json             Output the comparison result as JSON (machine-readable)
+          -q, --quiet        Suppress output; report the result via the exit code only
           -v, --version      Show version information
           -h, --help         Show this help message
 
